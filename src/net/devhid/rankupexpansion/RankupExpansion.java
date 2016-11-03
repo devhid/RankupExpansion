@@ -2,20 +2,28 @@ package net.devhid.rankupexpansion;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import net.devhid.pexrankup.RankupAPI;
 import net.devhid.pexrankup.RankupPlugin;
+import net.devhid.pexrankup.api.RankupAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class RankupExpansion extends PlaceholderExpansion {
 
-    private PermissionsEx plugin;
+    private final PluginManager pluginManager;
+
+    private PermissionsEx pex;
+    private RankupPlugin rankup;
+
+    public RankupExpansion() {
+        this.pluginManager = Bukkit.getPluginManager();
+    }
 
     @Override
     public boolean canRegister() {
-        return Bukkit.getPluginManager().getPlugin(getPlugin()) != null;
+        return pluginManager.getPlugin(getPlugin()) != null && pluginManager.getPlugin("PEX-Rankup") != null;
     }
 
     @Override
@@ -25,10 +33,10 @@ public class RankupExpansion extends PlaceholderExpansion {
             return false;
         }
 
-        plugin = (PermissionsEx) Bukkit.getPluginManager().getPlugin(getPlugin());
+        pex = (PermissionsEx) pluginManager.getPlugin(getPlugin());
+        rankup = (RankupPlugin) pluginManager.getPlugin("PEX-Rankup");
 
-
-        if (plugin == null) {
+        if (pex == null || rankup == null) {
             return false;
         }
 
@@ -52,7 +60,7 @@ public class RankupExpansion extends PlaceholderExpansion {
 
     @Override
     public String getVersion() {
-        return "1.0.1";
+        return "1.0.2";
     }
 
     @Override
@@ -61,8 +69,8 @@ public class RankupExpansion extends PlaceholderExpansion {
             return "";
         }
 
-        RankupAPI rankupAPI = RankupPlugin.getRankupAPI();
-        PermissionUser user = plugin.getPermissionsManager().getUser(player);
+        RankupAPI rankupAPI = rankup.getRankupAPI();
+        PermissionUser user = pex.getPermissionsManager().getUser(player);
 
         if(identifier.equals("current_group")) {
             return rankupAPI.getCurrentGroup(user);
