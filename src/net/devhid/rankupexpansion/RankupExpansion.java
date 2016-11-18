@@ -13,12 +13,10 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 public class RankupExpansion extends PlaceholderExpansion {
 
     private final PluginManager pluginManager;
-
     private PermissionsEx pex;
-    private RankupPlugin rankup;
 
     public RankupExpansion() {
-        this.pluginManager = Bukkit.getPluginManager();
+        this.pluginManager = Bukkit.getServer().getPluginManager();
     }
 
     @Override
@@ -34,7 +32,7 @@ public class RankupExpansion extends PlaceholderExpansion {
         }
 
         pex = (PermissionsEx) pluginManager.getPlugin(getPlugin());
-        rankup = (RankupPlugin) pluginManager.getPlugin("PEX-Rankup");
+        RankupPlugin rankup = (RankupPlugin) pluginManager.getPlugin("PEX-Rankup");
 
         if (pex == null || rankup == null) {
             return false;
@@ -60,7 +58,7 @@ public class RankupExpansion extends PlaceholderExpansion {
 
     @Override
     public String getVersion() {
-        return "1.0.2";
+        return "1.0.3";
     }
 
     @Override
@@ -69,7 +67,7 @@ public class RankupExpansion extends PlaceholderExpansion {
             return "";
         }
 
-        RankupAPI rankupAPI = rankup.getRankupAPI();
+        RankupAPI rankupAPI = RankupPlugin.getRankupAPI();
         PermissionUser user = pex.getPermissionsManager().getUser(player);
 
         if(identifier.equals("current_group")) {
